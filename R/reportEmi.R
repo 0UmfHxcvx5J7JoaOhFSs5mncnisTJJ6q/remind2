@@ -1066,11 +1066,9 @@ reportEmi <- function(gdx, output = NULL, regionSubsetList = NULL, t = c(seq(200
 
   ### report industry captured CO2 ----
   if (!is.null(pm_IndstCO2Captured)) {
-    variable_prefix  <- 'Carbon Management|Carbon Capture|Industry Energy|'
-    variable_postfix <- ' (Mt CO2/yr)'
-
     mixer <- tribble(
       ~variable,                       ~secInd37,     ~all_enty1,   ~all_enty,
+      '',                              NULL,          NULL,         NULL,
       '+|Fossil',                      NULL,          NULL,         entySEfos,
       '+|Biomass',                     NULL,          NULL,         entySEbio,
       '+|Synfuel',                     NULL,          NULL,         entySEsyn,
@@ -1122,24 +1120,44 @@ reportEmi <- function(gdx, output = NULL, regionSubsetList = NULL, t = c(seq(200
       'Steel|+|Fossil',                'steel',       NULL,         entySEfos,
       'Steel|+|Biomass',               'steel',       NULL,         entySEbio,
       'Steel|+|Synfuel',               'steel',       NULL,         entySEsyn
-      ) %>%
-      mutate(
-        variable = paste0(variable_prefix, .data$variable, variable_postfix))
+      )
 
-    out <- mbind(
-      out,
-
-      lapply(.mixer_to_selector(mixer), function(x) {   # for each row
-        setNames(
+    .calculate <- function(mixer, prefix, factor = 1) {
+      mixer %>%
+        mutate(
+          variable = paste0(ifelse('' == .data$variable,
+                                   prefix,
+                                   paste0(prefix, '|', .data$variable)),
+                            ' (Mt CO2/yr)')) %>%
+        .mixer_to_selector() %>%
+        lapply(function(x) {   # for each row
+          setNames(
             # extract relevant portions from pm_IndstCO2Captured
             # call mselect(), but without the 'variable' column
             dimSums(
               mselect(pm_IndstCO2Captured, x[setdiff(names(x), 'variable')]),
               dim = 3)
-          * GtC_2_MtCO2,
-          x[['variable']])
-      }) %>%
-        mbind())
+            * factor
+            * GtC_2_MtCO2,
+            x[['variable']])
+        }) %>%
+        mbind()
+    }
+
+    out <- mbind(
+      out,
+
+      # calculate carbon capture
+      .calculate(mixer, 'Carbon Management|Carbon Capture|Industry Energy'),
+
+      # calculate carbon storage
+      .calculate(mixer, 'Carbon Management|Storage|Industry Energy',
+                 p_share_CCS),
+
+      # calculate carbon usage
+      .calculate(mixer, 'Carbon Management|Usage|Industry Energy',
+                 (1 - p_share_CCS))
+    )
   } else {
 
     if (!is.null(o37_demFeIndSub)) {
@@ -1259,13 +1277,6 @@ reportEmi <- function(gdx, output = NULL, regionSubsetList = NULL, t = c(seq(200
                           "Carbon Management|Storage|+|Fossil|Pe2Se (Mt CO2/yr)"),
                setNames(out[, , "Carbon Management|Carbon Capture|+|Industry Energy (Mt CO2/yr)"] * p_share_CCS,
                           "Carbon Management|Storage|+|Industry Energy (Mt CO2/yr)"),
-               # subcategories of industry energy CCS depending on whether the FE that industry demands comes from fossil, biomass or synfuel origin
-               setNames(out[, , "Carbon Management|Carbon Capture|Industry Energy|+|Fossil (Mt CO2/yr)"] * p_share_CCS,
-                          "Carbon Management|Storage|Industry Energy|+|Fossil (Mt CO2/yr)"),
-               setNames(out[, , "Carbon Management|Carbon Capture|Industry Energy|+|Biomass (Mt CO2/yr)"] * p_share_CCS,
-                          "Carbon Management|Storage|Industry Energy|+|Biomass (Mt CO2/yr)"),
-               setNames(out[, , "Carbon Management|Carbon Capture|Industry Energy|+|Synfuel (Mt CO2/yr)"] * p_share_CCS,
-                          "Carbon Management|Storage|Industry Energy|+|Synfuel (Mt CO2/yr)"),
                setNames(out[, , "Carbon Management|Carbon Capture|+|Industry Process (Mt CO2/yr)"] * p_share_CCS,
                           "Carbon Management|Storage|+|Industry Process (Mt CO2/yr)"),
                setNames(out[, , "Carbon Management|Carbon Capture|+|DAC (Mt CO2/yr)"] * p_share_CCS,
