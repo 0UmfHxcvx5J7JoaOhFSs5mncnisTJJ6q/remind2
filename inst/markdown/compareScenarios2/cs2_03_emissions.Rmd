@@ -467,10 +467,62 @@ showLinePlots(data, "Emi|GHG|F-Gases")
 
 ```{r Industry Subsector Emissions}
 items <- c(
-  "Emi|CO2|Energy|Demand|Industry|Steel",
   "Emi|CO2|Energy|Demand|Industry|Cement",
   "Emi|CO2|Energy|Demand|Industry|Chemicals",
+  "Emi|CO2|Energy|Demand|Industry|Steel",
   "Emi|CO2|Energy|Demand|Industry|Other Industry")
 showAreaAndBarPlots(data, items, scales = "fixed")
 walk(items, showLinePlots, data = data)
+```
+
+### Cement
+```{r Industry Subsector Emissions Cement}
+items <- c('Emi|CO2|Energy|Demand|Industry|Cement|Solids|Fossil',
+           'Emi|CO2|Energy|Demand|Industry|Cement|Solids|Biomass',
+           'Emi|CO2|Energy|Demand|Industry|Cement|Liquids|Fossil',
+           'Emi|CO2|Energy|Demand|Industry|Cement|Liquids|Biomass',
+           'Emi|CO2|Energy|Demand|Industry|Cement|Liquids|Synfuel',
+           'Emi|CO2|Energy|Demand|Industry|Cement|Gases|Fossil',
+           'Emi|CO2|Energy|Demand|Industry|Cement|Gases|Biomass',
+           'Emi|CO2|Energy|Demand|Industry|Cement|Gases|Synfuel')
+showAreaAndBarPlots(data, items, scales = "fixed")
+walk(items, showLinePlots, data = data)
+```
+
+### Chemicals
+```{r Industry Subsector Emissions Chemicals}
+items <- c('Emi|CO2|Energy|Demand|Industry|Chemicals|Solids|Fossil',
+           'Emi|CO2|Energy|Demand|Industry|Chemicals|Solids|Biomass',
+           'Emi|CO2|Energy|Demand|Industry|Chemicals|Liquids|Fossil',
+           'Emi|CO2|Energy|Demand|Industry|Chemicals|Liquids|Biomass',
+           'Emi|CO2|Energy|Demand|Industry|Chemicals|Liquids|Synfuel',
+           'Emi|CO2|Energy|Demand|Industry|Chemicals|Gases|Fossil',
+           'Emi|CO2|Energy|Demand|Industry|Chemicals|Gases|Biomass',
+           'Emi|CO2|Energy|Demand|Industry|Chemicals|Gases|Synfuel')
+showAreaAndBarPlots(data, items, scales = "fixed")
+walk(items, showLinePlots, data = data)
+```
+
+### Steel
+```{r Industry Subsector Emissions Steel}
+items <- c('Emi|CO2|Energy|Demand|Industry|Steel|Solids|Fossil',
+           'Emi|CO2|Energy|Demand|Industry|Steel|Solids|Biomass',
+           'Emi|CO2|Energy|Demand|Industry|Steel|Liquids|Fossil',
+           'Emi|CO2|Energy|Demand|Industry|Steel|Liquids|Biomass',
+           'Emi|CO2|Energy|Demand|Industry|Steel|Liquids|Synfuel',
+           'Emi|CO2|Energy|Demand|Industry|Steel|Gases|Fossil',
+           'Emi|CO2|Energy|Demand|Industry|Steel|Gases|Biomass',
+           'Emi|CO2|Energy|Demand|Industry|Steel|Gases|Synfuel')
+showAreaAndBarPlots(data, items, scales = "fixed")
+walk(items, showLinePlots, data = data)
+```
+
+### Other Industry
+```{r Industry Subsector Emissions Other Industry}
+items <- c('Emi|CO2|Energy|Demand|Industry|Other Industry|Solids|Fossil',
+           'Emi|CO2|Energy|Demand|Industry|Other Industry|Liquids|Fossil',
+           'Emi|CO2|Energy|Demand|Industry|Other Industry|Gases|Fossil')
+showAreaAndBarPlots(data, items, scales = "fixed")
+walk(items, showLinePlots, data = data)
+
 ```
