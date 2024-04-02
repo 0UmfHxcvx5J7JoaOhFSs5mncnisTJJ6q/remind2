@@ -252,7 +252,7 @@ showAreaAndBarPlots(data, items, tot, scales = "fixed")
 items <- c(
   "Emi|CO2|Industrial Processes|Cement",
   "Emi|CO2|Industrial Processes|Minerals" # to display historical data from UNFCCC
-  ) 
+  )
 showLinePlots(data, items)
 ```
 
@@ -261,7 +261,7 @@ showLinePlots(data, items)
 
 ```{r}
 items <- c(
-  "Emi|CO2|Industrial Processes|Chemicals") 
+  "Emi|CO2|Industrial Processes|Chemicals")
 showLinePlots(data, items)
 ```
 
@@ -269,7 +269,7 @@ showLinePlots(data, items)
 
 ```{r}
 items <- c(
-  "Emi|CO2|Industrial Processes|Metals") 
+  "Emi|CO2|Industrial Processes|Metals")
 showLinePlots(data, items)
 ```
 
